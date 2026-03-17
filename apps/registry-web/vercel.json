@@ -1,0 +1,10 @@
+{
+  "framework": null,
+  "installCommand": "bun install",
+  "buildCommand": "cd apps/registry-web && NITRO_PRESET=vercel bun run build",
+  "outputDirectory": "apps/registry-web/.vercel/output",
+  "env": {
+    "NITRO_PRESET": "vercel",
+    "VITE_REGISTRY_URL": "https://tsx-registry-production.up.railway.app"
+  }
+}

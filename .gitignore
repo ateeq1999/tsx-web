@@ -1,0 +1,30 @@
+node_modules
+dist
+dist-ssr
+*.local
+.env
+.env.*
+!.env.example
+
+# Build outputs
+.output
+.nitro
+.tanstack
+.vinxi
+.wrangler
+__unconfig*
+
+# Vercel
+.vercel
+
+# Test/storybook artifacts
+apps/registry-web/playwright-report/
+apps/registry-web/test-results/
+apps/registry-web/storybook-static/
+apps/docs/playwright-report/
+apps/docs/test-results/
+
+# Misc
+.DS_Store
+count.txt
+todos.json

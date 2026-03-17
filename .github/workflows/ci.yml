@@ -1,0 +1,36 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    name: Build & Typecheck
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Typecheck registry-web
+        working-directory: apps/registry-web
+        run: bun run typecheck
+
+      - name: Build registry-web
+        working-directory: apps/registry-web
+        run: bun run build
+        env:
+          NITRO_PRESET: node
+
+      - name: Build docs
+        working-directory: apps/docs
+        run: bun run build
+        env:
+          NITRO_PRESET: node

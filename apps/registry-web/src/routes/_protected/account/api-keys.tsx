@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/dialog"
 import { createServerFn } from "@tanstack/react-start"
 import { getRequestHeaders } from "@tanstack/react-start/server"
-import { auth } from "@/server/auth"
+import { auth } from "@/lib/auth"
 
 // Server functions for API token management via better-auth
 const listApiKeysFn = createServerFn({ method: "GET" }).handler(async () => {

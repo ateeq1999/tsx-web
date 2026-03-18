@@ -13,10 +13,24 @@ import { Route as ProtectedRouteImport } from './routes/_protected'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as BrowseIndexRouteImport } from './routes/browse/index'
 import { Route as PackagesNameRouteImport } from './routes/packages/$name'
+import { Route as AuthVerifyEmailRouteImport } from './routes/auth/verify-email'
+import { Route as AuthResetPasswordRouteImport } from './routes/auth/reset-password'
 import { Route as AuthRegisterRouteImport } from './routes/auth/register'
 import { Route as AuthLoginRouteImport } from './routes/auth/login'
+import { Route as AuthForgotPasswordRouteImport } from './routes/auth/forgot-password'
+import { Route as ProtectedPublishIndexRouteImport } from './routes/_protected/publish/index'
+import { Route as ProtectedPackagesIndexRouteImport } from './routes/_protected/packages/index'
 import { Route as ProtectedDashboardIndexRouteImport } from './routes/_protected/dashboard/index'
+import { Route as ProtectedAdminIndexRouteImport } from './routes/_protected/admin/index'
+import { Route as ProtectedAccountIndexRouteImport } from './routes/_protected/account/index'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth.$'
+import { Route as ProtectedAdminUsersRouteImport } from './routes/_protected/admin/users'
+import { Route as ProtectedAdminRateLimitsRouteImport } from './routes/_protected/admin/rate-limits'
+import { Route as ProtectedAdminPackagesRouteImport } from './routes/_protected/admin/packages'
+import { Route as ProtectedAdminAuditLogRouteImport } from './routes/_protected/admin/audit-log'
+import { Route as ProtectedAccountSessionsRouteImport } from './routes/_protected/account/sessions'
+import { Route as ProtectedAccountApiKeysRouteImport } from './routes/_protected/account/api-keys'
+import { Route as ProtectedPackagesNameEditRouteImport } from './routes/_protected/packages/$name.edit'
 
 const ProtectedRoute = ProtectedRouteImport.update({
   id: '/_protected',
@@ -37,6 +51,16 @@ const PackagesNameRoute = PackagesNameRouteImport.update({
   path: '/packages/$name',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthVerifyEmailRoute = AuthVerifyEmailRouteImport.update({
+  id: '/auth/verify-email',
+  path: '/auth/verify-email',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthResetPasswordRoute = AuthResetPasswordRouteImport.update({
+  id: '/auth/reset-password',
+  path: '/auth/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthRegisterRoute = AuthRegisterRouteImport.update({
   id: '/auth/register',
   path: '/auth/register',
@@ -47,9 +71,34 @@ const AuthLoginRoute = AuthLoginRouteImport.update({
   path: '/auth/login',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthForgotPasswordRoute = AuthForgotPasswordRouteImport.update({
+  id: '/auth/forgot-password',
+  path: '/auth/forgot-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProtectedPublishIndexRoute = ProtectedPublishIndexRouteImport.update({
+  id: '/publish/',
+  path: '/publish/',
+  getParentRoute: () => ProtectedRoute,
+} as any)
+const ProtectedPackagesIndexRoute = ProtectedPackagesIndexRouteImport.update({
+  id: '/packages/',
+  path: '/packages/',
+  getParentRoute: () => ProtectedRoute,
+} as any)
 const ProtectedDashboardIndexRoute = ProtectedDashboardIndexRouteImport.update({
   id: '/dashboard/',
   path: '/dashboard/',
+  getParentRoute: () => ProtectedRoute,
+} as any)
+const ProtectedAdminIndexRoute = ProtectedAdminIndexRouteImport.update({
+  id: '/admin/',
+  path: '/admin/',
+  getParentRoute: () => ProtectedRoute,
+} as any)
+const ProtectedAccountIndexRoute = ProtectedAccountIndexRouteImport.update({
+  id: '/account/',
+  path: '/account/',
   getParentRoute: () => ProtectedRoute,
 } as any)
 const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
@@ -57,72 +106,197 @@ const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   path: '/api/auth/$',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProtectedAdminUsersRoute = ProtectedAdminUsersRouteImport.update({
+  id: '/admin/users',
+  path: '/admin/users',
+  getParentRoute: () => ProtectedRoute,
+} as any)
+const ProtectedAdminRateLimitsRoute =
+  ProtectedAdminRateLimitsRouteImport.update({
+    id: '/admin/rate-limits',
+    path: '/admin/rate-limits',
+    getParentRoute: () => ProtectedRoute,
+  } as any)
+const ProtectedAdminPackagesRoute = ProtectedAdminPackagesRouteImport.update({
+  id: '/admin/packages',
+  path: '/admin/packages',
+  getParentRoute: () => ProtectedRoute,
+} as any)
+const ProtectedAdminAuditLogRoute = ProtectedAdminAuditLogRouteImport.update({
+  id: '/admin/audit-log',
+  path: '/admin/audit-log',
+  getParentRoute: () => ProtectedRoute,
+} as any)
+const ProtectedAccountSessionsRoute =
+  ProtectedAccountSessionsRouteImport.update({
+    id: '/account/sessions',
+    path: '/account/sessions',
+    getParentRoute: () => ProtectedRoute,
+  } as any)
+const ProtectedAccountApiKeysRoute = ProtectedAccountApiKeysRouteImport.update({
+  id: '/account/api-keys',
+  path: '/account/api-keys',
+  getParentRoute: () => ProtectedRoute,
+} as any)
+const ProtectedPackagesNameEditRoute =
+  ProtectedPackagesNameEditRouteImport.update({
+    id: '/packages/$name/edit',
+    path: '/packages/$name/edit',
+    getParentRoute: () => ProtectedRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/auth/forgot-password': typeof AuthForgotPasswordRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
+  '/auth/reset-password': typeof AuthResetPasswordRoute
+  '/auth/verify-email': typeof AuthVerifyEmailRoute
   '/packages/$name': typeof PackagesNameRoute
   '/browse/': typeof BrowseIndexRoute
+  '/account/api-keys': typeof ProtectedAccountApiKeysRoute
+  '/account/sessions': typeof ProtectedAccountSessionsRoute
+  '/admin/audit-log': typeof ProtectedAdminAuditLogRoute
+  '/admin/packages': typeof ProtectedAdminPackagesRoute
+  '/admin/rate-limits': typeof ProtectedAdminRateLimitsRoute
+  '/admin/users': typeof ProtectedAdminUsersRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/account/': typeof ProtectedAccountIndexRoute
+  '/admin/': typeof ProtectedAdminIndexRoute
   '/dashboard/': typeof ProtectedDashboardIndexRoute
+  '/packages/': typeof ProtectedPackagesIndexRoute
+  '/publish/': typeof ProtectedPublishIndexRoute
+  '/packages/$name/edit': typeof ProtectedPackagesNameEditRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/auth/forgot-password': typeof AuthForgotPasswordRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
+  '/auth/reset-password': typeof AuthResetPasswordRoute
+  '/auth/verify-email': typeof AuthVerifyEmailRoute
   '/packages/$name': typeof PackagesNameRoute
   '/browse': typeof BrowseIndexRoute
+  '/account/api-keys': typeof ProtectedAccountApiKeysRoute
+  '/account/sessions': typeof ProtectedAccountSessionsRoute
+  '/admin/audit-log': typeof ProtectedAdminAuditLogRoute
+  '/admin/packages': typeof ProtectedAdminPackagesRoute
+  '/admin/rate-limits': typeof ProtectedAdminRateLimitsRoute
+  '/admin/users': typeof ProtectedAdminUsersRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/account': typeof ProtectedAccountIndexRoute
+  '/admin': typeof ProtectedAdminIndexRoute
   '/dashboard': typeof ProtectedDashboardIndexRoute
+  '/packages': typeof ProtectedPackagesIndexRoute
+  '/publish': typeof ProtectedPublishIndexRoute
+  '/packages/$name/edit': typeof ProtectedPackagesNameEditRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_protected': typeof ProtectedRouteWithChildren
+  '/auth/forgot-password': typeof AuthForgotPasswordRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
+  '/auth/reset-password': typeof AuthResetPasswordRoute
+  '/auth/verify-email': typeof AuthVerifyEmailRoute
   '/packages/$name': typeof PackagesNameRoute
   '/browse/': typeof BrowseIndexRoute
+  '/_protected/account/api-keys': typeof ProtectedAccountApiKeysRoute
+  '/_protected/account/sessions': typeof ProtectedAccountSessionsRoute
+  '/_protected/admin/audit-log': typeof ProtectedAdminAuditLogRoute
+  '/_protected/admin/packages': typeof ProtectedAdminPackagesRoute
+  '/_protected/admin/rate-limits': typeof ProtectedAdminRateLimitsRoute
+  '/_protected/admin/users': typeof ProtectedAdminUsersRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/_protected/account/': typeof ProtectedAccountIndexRoute
+  '/_protected/admin/': typeof ProtectedAdminIndexRoute
   '/_protected/dashboard/': typeof ProtectedDashboardIndexRoute
+  '/_protected/packages/': typeof ProtectedPackagesIndexRoute
+  '/_protected/publish/': typeof ProtectedPublishIndexRoute
+  '/_protected/packages/$name/edit': typeof ProtectedPackagesNameEditRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/auth/forgot-password'
     | '/auth/login'
     | '/auth/register'
+    | '/auth/reset-password'
+    | '/auth/verify-email'
     | '/packages/$name'
     | '/browse/'
+    | '/account/api-keys'
+    | '/account/sessions'
+    | '/admin/audit-log'
+    | '/admin/packages'
+    | '/admin/rate-limits'
+    | '/admin/users'
     | '/api/auth/$'
+    | '/account/'
+    | '/admin/'
     | '/dashboard/'
+    | '/packages/'
+    | '/publish/'
+    | '/packages/$name/edit'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/auth/forgot-password'
     | '/auth/login'
     | '/auth/register'
+    | '/auth/reset-password'
+    | '/auth/verify-email'
     | '/packages/$name'
     | '/browse'
+    | '/account/api-keys'
+    | '/account/sessions'
+    | '/admin/audit-log'
+    | '/admin/packages'
+    | '/admin/rate-limits'
+    | '/admin/users'
     | '/api/auth/$'
+    | '/account'
+    | '/admin'
     | '/dashboard'
+    | '/packages'
+    | '/publish'
+    | '/packages/$name/edit'
   id:
     | '__root__'
     | '/'
     | '/_protected'
+    | '/auth/forgot-password'
     | '/auth/login'
     | '/auth/register'
+    | '/auth/reset-password'
+    | '/auth/verify-email'
     | '/packages/$name'
     | '/browse/'
+    | '/_protected/account/api-keys'
+    | '/_protected/account/sessions'
+    | '/_protected/admin/audit-log'
+    | '/_protected/admin/packages'
+    | '/_protected/admin/rate-limits'
+    | '/_protected/admin/users'
     | '/api/auth/$'
+    | '/_protected/account/'
+    | '/_protected/admin/'
     | '/_protected/dashboard/'
+    | '/_protected/packages/'
+    | '/_protected/publish/'
+    | '/_protected/packages/$name/edit'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ProtectedRoute: typeof ProtectedRouteWithChildren
+  AuthForgotPasswordRoute: typeof AuthForgotPasswordRoute
   AuthLoginRoute: typeof AuthLoginRoute
   AuthRegisterRoute: typeof AuthRegisterRoute
+  AuthResetPasswordRoute: typeof AuthResetPasswordRoute
+  AuthVerifyEmailRoute: typeof AuthVerifyEmailRoute
   PackagesNameRoute: typeof PackagesNameRoute
   BrowseIndexRoute: typeof BrowseIndexRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
@@ -158,6 +332,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PackagesNameRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/auth/verify-email': {
+      id: '/auth/verify-email'
+      path: '/auth/verify-email'
+      fullPath: '/auth/verify-email'
+      preLoaderRoute: typeof AuthVerifyEmailRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth/reset-password': {
+      id: '/auth/reset-password'
+      path: '/auth/reset-password'
+      fullPath: '/auth/reset-password'
+      preLoaderRoute: typeof AuthResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/auth/register': {
       id: '/auth/register'
       path: '/auth/register'
@@ -172,11 +360,46 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthLoginRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/auth/forgot-password': {
+      id: '/auth/forgot-password'
+      path: '/auth/forgot-password'
+      fullPath: '/auth/forgot-password'
+      preLoaderRoute: typeof AuthForgotPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_protected/publish/': {
+      id: '/_protected/publish/'
+      path: '/publish'
+      fullPath: '/publish/'
+      preLoaderRoute: typeof ProtectedPublishIndexRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
+    '/_protected/packages/': {
+      id: '/_protected/packages/'
+      path: '/packages'
+      fullPath: '/packages/'
+      preLoaderRoute: typeof ProtectedPackagesIndexRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
     '/_protected/dashboard/': {
       id: '/_protected/dashboard/'
       path: '/dashboard'
       fullPath: '/dashboard/'
       preLoaderRoute: typeof ProtectedDashboardIndexRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
+    '/_protected/admin/': {
+      id: '/_protected/admin/'
+      path: '/admin'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof ProtectedAdminIndexRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
+    '/_protected/account/': {
+      id: '/_protected/account/'
+      path: '/account'
+      fullPath: '/account/'
+      preLoaderRoute: typeof ProtectedAccountIndexRouteImport
       parentRoute: typeof ProtectedRoute
     }
     '/api/auth/$': {
@@ -186,15 +409,86 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiAuthSplatRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_protected/admin/users': {
+      id: '/_protected/admin/users'
+      path: '/admin/users'
+      fullPath: '/admin/users'
+      preLoaderRoute: typeof ProtectedAdminUsersRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
+    '/_protected/admin/rate-limits': {
+      id: '/_protected/admin/rate-limits'
+      path: '/admin/rate-limits'
+      fullPath: '/admin/rate-limits'
+      preLoaderRoute: typeof ProtectedAdminRateLimitsRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
+    '/_protected/admin/packages': {
+      id: '/_protected/admin/packages'
+      path: '/admin/packages'
+      fullPath: '/admin/packages'
+      preLoaderRoute: typeof ProtectedAdminPackagesRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
+    '/_protected/admin/audit-log': {
+      id: '/_protected/admin/audit-log'
+      path: '/admin/audit-log'
+      fullPath: '/admin/audit-log'
+      preLoaderRoute: typeof ProtectedAdminAuditLogRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
+    '/_protected/account/sessions': {
+      id: '/_protected/account/sessions'
+      path: '/account/sessions'
+      fullPath: '/account/sessions'
+      preLoaderRoute: typeof ProtectedAccountSessionsRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
+    '/_protected/account/api-keys': {
+      id: '/_protected/account/api-keys'
+      path: '/account/api-keys'
+      fullPath: '/account/api-keys'
+      preLoaderRoute: typeof ProtectedAccountApiKeysRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
+    '/_protected/packages/$name/edit': {
+      id: '/_protected/packages/$name/edit'
+      path: '/packages/$name/edit'
+      fullPath: '/packages/$name/edit'
+      preLoaderRoute: typeof ProtectedPackagesNameEditRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
   }
 }
 
 interface ProtectedRouteChildren {
+  ProtectedAccountApiKeysRoute: typeof ProtectedAccountApiKeysRoute
+  ProtectedAccountSessionsRoute: typeof ProtectedAccountSessionsRoute
+  ProtectedAdminAuditLogRoute: typeof ProtectedAdminAuditLogRoute
+  ProtectedAdminPackagesRoute: typeof ProtectedAdminPackagesRoute
+  ProtectedAdminRateLimitsRoute: typeof ProtectedAdminRateLimitsRoute
+  ProtectedAdminUsersRoute: typeof ProtectedAdminUsersRoute
+  ProtectedAccountIndexRoute: typeof ProtectedAccountIndexRoute
+  ProtectedAdminIndexRoute: typeof ProtectedAdminIndexRoute
   ProtectedDashboardIndexRoute: typeof ProtectedDashboardIndexRoute
+  ProtectedPackagesIndexRoute: typeof ProtectedPackagesIndexRoute
+  ProtectedPublishIndexRoute: typeof ProtectedPublishIndexRoute
+  ProtectedPackagesNameEditRoute: typeof ProtectedPackagesNameEditRoute
 }
 
 const ProtectedRouteChildren: ProtectedRouteChildren = {
+  ProtectedAccountApiKeysRoute: ProtectedAccountApiKeysRoute,
+  ProtectedAccountSessionsRoute: ProtectedAccountSessionsRoute,
+  ProtectedAdminAuditLogRoute: ProtectedAdminAuditLogRoute,
+  ProtectedAdminPackagesRoute: ProtectedAdminPackagesRoute,
+  ProtectedAdminRateLimitsRoute: ProtectedAdminRateLimitsRoute,
+  ProtectedAdminUsersRoute: ProtectedAdminUsersRoute,
+  ProtectedAccountIndexRoute: ProtectedAccountIndexRoute,
+  ProtectedAdminIndexRoute: ProtectedAdminIndexRoute,
   ProtectedDashboardIndexRoute: ProtectedDashboardIndexRoute,
+  ProtectedPackagesIndexRoute: ProtectedPackagesIndexRoute,
+  ProtectedPublishIndexRoute: ProtectedPublishIndexRoute,
+  ProtectedPackagesNameEditRoute: ProtectedPackagesNameEditRoute,
 }
 
 const ProtectedRouteWithChildren = ProtectedRoute._addFileChildren(
@@ -204,8 +498,11 @@ const ProtectedRouteWithChildren = ProtectedRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ProtectedRoute: ProtectedRouteWithChildren,
+  AuthForgotPasswordRoute: AuthForgotPasswordRoute,
   AuthLoginRoute: AuthLoginRoute,
   AuthRegisterRoute: AuthRegisterRoute,
+  AuthResetPasswordRoute: AuthResetPasswordRoute,
+  AuthVerifyEmailRoute: AuthVerifyEmailRoute,
   PackagesNameRoute: PackagesNameRoute,
   BrowseIndexRoute: BrowseIndexRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,

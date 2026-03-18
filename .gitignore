@@ -28,3 +28,4 @@ apps/docs/test-results/
 .DS_Store
 count.txt
 todos.json
+.vercel

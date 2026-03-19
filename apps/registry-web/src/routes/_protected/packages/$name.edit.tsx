@@ -19,7 +19,7 @@ export const Route = createFileRoute("/_protected/packages/$name/edit")({
   component: PackageEditPage,
 })
 
-const REGISTRY_URL = import.meta.env.VITE_REGISTRY_URL ?? "http://localhost:8080"
+const REGISTRY_URL = import.meta.env.VITE_REGISTRY_URL ?? "https://tsx-tsnv.onrender.com"
 
 function PackageEditPage() {
   const { name } = Route.useParams()

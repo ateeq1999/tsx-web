@@ -275,7 +275,7 @@ function Step4({ step1, step2, onBack, onPublished }: { step1: Step1Data; step2:
       if (step2.tarball) form.append("tarball", step2.tarball)
 
       const apiKey = import.meta.env.VITE_REGISTRY_API_KEY ?? ""
-      const base = import.meta.env.VITE_REGISTRY_URL ?? "http://localhost:8080"
+      const base = import.meta.env.VITE_REGISTRY_URL ?? "https://tsx-tsnv.onrender.com"
       const res = await fetch(`${base}/v1/packages/publish`, {
         method: "POST",
         headers: { Authorization: `Bearer ${apiKey}` },

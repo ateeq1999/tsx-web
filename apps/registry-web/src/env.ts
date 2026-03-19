@@ -1,7 +1,7 @@
 import { z } from "zod"
 
 const envSchema = z.object({
-  VITE_REGISTRY_URL: z.string().url().optional().default("http://localhost:8080"),
+  VITE_REGISTRY_URL: z.string().url().optional().default("https://tsx-tsnv.onrender.com"),
   VITE_SITE_URL: z.string().url().optional().default("https://registry.tsx.dev"),
   VITE_SERVER_URL: z.string().url().optional().default("http://localhost:3000"),
 })

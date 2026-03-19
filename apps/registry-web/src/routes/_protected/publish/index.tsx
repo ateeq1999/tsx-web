@@ -5,6 +5,7 @@ import { ArrowLeft, ArrowRight, Check, Upload } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
+import { env } from "@/env"
 
 const DRAFT_KEY = "tsx-publish-draft"
 
@@ -275,7 +276,7 @@ function Step4({ step1, step2, onBack, onPublished }: { step1: Step1Data; step2:
       if (step2.tarball) form.append("tarball", step2.tarball)
 
       const apiKey = import.meta.env.VITE_REGISTRY_API_KEY ?? ""
-      const base = import.meta.env.VITE_REGISTRY_URL ?? "https://tsx-tsnv.onrender.com"
+      const base = env.VITE_REGISTRY_URL
       const res = await fetch(`${base}/v1/packages/publish`, {
         method: "POST",
         headers: { Authorization: `Bearer ${apiKey}` },

@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { ArrowLeft, AlertTriangle } from "lucide-react"
+import { env } from "@/env"
 
 export const Route = createFileRoute("/_protected/packages/$name/edit")({
   beforeLoad: async () => requireAuth(),
@@ -19,7 +20,7 @@ export const Route = createFileRoute("/_protected/packages/$name/edit")({
   component: PackageEditPage,
 })
 
-const REGISTRY_URL = import.meta.env.VITE_REGISTRY_URL ?? "https://tsx-tsnv.onrender.com"
+const REGISTRY_URL = env.VITE_REGISTRY_URL
 
 function PackageEditPage() {
   const { name } = Route.useParams()

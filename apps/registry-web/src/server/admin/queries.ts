@@ -4,8 +4,9 @@ import { db } from "@/db"
 import { user } from "@/db/schema/auth"
 import { requireRole } from "@/middleware/role-guard"
 import type { AuditEntry, RateLimitEntry } from "@tsx/api-types"
+import { env } from "@/env"
 
-const REGISTRY_URL = process.env.VITE_REGISTRY_URL ?? "https://tsx-tsnv.onrender.com"
+const REGISTRY_URL = env.VITE_REGISTRY_URL
 
 // ── Users (better-auth table — stays in Drizzle) ──────────────────────────────
 

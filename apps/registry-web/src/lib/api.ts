@@ -7,8 +7,9 @@ import {
   SearchResultSchema,
 } from "./schemas"
 import type { Package, PackageVersion, RegistryStats, SearchResult, DailyDownloads } from "./types"
+import { env } from "@/env"
 
-const BASE_URL = import.meta.env.VITE_REGISTRY_URL ?? "https://tsx-tsnv.onrender.com"
+const BASE_URL = env.VITE_REGISTRY_URL
 
 async function fetchJson<T>(path: string, schema: z.ZodType<T>): Promise<T> {
   const res = await fetch(`${BASE_URL}${path}`)

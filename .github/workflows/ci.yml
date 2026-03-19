@@ -23,17 +23,17 @@ jobs:
         working-directory: apps/registry-web
         run: bun run typecheck
 
-      - name: Build registry-web
+      - name: Build registry-web (vercel preset)
         working-directory: apps/registry-web
         run: bun run build
         env:
-          NITRO_PRESET: node
+          NITRO_PRESET: vercel
 
-      - name: Build docs
+      - name: Build docs (vercel preset)
         working-directory: apps/docs
         run: bun run build
         env:
-          NITRO_PRESET: node
+          NITRO_PRESET: vercel
 
   deploy:
     name: Deploy to Vercel
@@ -52,10 +52,16 @@ jobs:
       - name: Install dependencies
         run: bun install
 
+      - name: Build registry-web (vercel preset)
+        working-directory: apps/registry-web
+        run: bun run build
+        env:
+          NITRO_PRESET: vercel
+
       - name: Deploy registry-web
+        working-directory: apps/registry-web
         run: |
-          vercel deploy . \
-            --local-config apps/registry-web/vercel.json \
+          vercel deploy --prebuilt \
             --scope ateeq1999s-projects \
             --prod --yes \
             --token ${{ secrets.VERCEL_TOKEN }}
@@ -63,10 +69,16 @@ jobs:
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_REGISTRY_WEB_PROJECT_ID }}
 
+      - name: Build docs (vercel preset)
+        working-directory: apps/docs
+        run: bun run build
+        env:
+          NITRO_PRESET: vercel
+
       - name: Deploy docs
+        working-directory: apps/docs
         run: |
-          vercel deploy . \
-            --local-config apps/docs/vercel.json \
+          vercel deploy --prebuilt \
             --scope ateeq1999s-projects \
             --prod --yes \
             --token ${{ secrets.VERCEL_TOKEN }}

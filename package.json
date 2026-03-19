@@ -8,12 +8,12 @@
   "scripts": {
     "dev:web": "bun --cwd apps/registry-web dev",
     "dev:docs": "bun --cwd apps/docs dev",
-    "build:web": "bun --cwd apps/registry-web build",
-    "build:docs": "bun --cwd apps/docs build",
-    "deploy:web": "VERCEL_ORG_ID=team_ZXYg3N40sVxlvjK3XxEdk21M VERCEL_PROJECT_ID=prj_TuuSlGG2eGWFpgyr8QeYWd0zm2vj vercel deploy . --local-config apps/registry-web/vercel.json --scope ateeq1999s-projects --yes",
-    "deploy:web:prod": "VERCEL_ORG_ID=team_ZXYg3N40sVxlvjK3XxEdk21M VERCEL_PROJECT_ID=prj_TuuSlGG2eGWFpgyr8QeYWd0zm2vj vercel deploy . --local-config apps/registry-web/vercel.json --scope ateeq1999s-projects --prod --yes",
-    "deploy:docs": "VERCEL_ORG_ID=team_ZXYg3N40sVxlvjK3XxEdk21M VERCEL_PROJECT_ID=prj_aCHwTqnPA0dNj8qkYzjaDgCYB4tc vercel deploy . --local-config apps/docs/vercel.json --scope ateeq1999s-projects --yes",
-    "deploy:docs:prod": "VERCEL_ORG_ID=team_ZXYg3N40sVxlvjK3XxEdk21M VERCEL_PROJECT_ID=prj_aCHwTqnPA0dNj8qkYzjaDgCYB4tc vercel deploy . --local-config apps/docs/vercel.json --scope ateeq1999s-projects --prod --yes",
-    "deploy:all:prod": "bun run deploy:web:prod && bun run deploy:docs:prod"
+    "build:web": "cd apps/registry-web && NITRO_PRESET=vercel bun run build",
+    "build:docs": "cd apps/docs && NITRO_PRESET=vercel bun run build",
+    "deploy:web": "VERCEL_ORG_ID=team_ZXYg3N40sVxlvjK3XxEdk21M VERCEL_PROJECT_ID=prj_TuuSlGG2eGWFpgyr8QeYWd0zm2vj vercel deploy --prebuilt --cwd apps/registry-web --scope ateeq1999s-projects --yes",
+    "deploy:web:prod": "VERCEL_ORG_ID=team_ZXYg3N40sVxlvjK3XxEdk21M VERCEL_PROJECT_ID=prj_TuuSlGG2eGWFpgyr8QeYWd0zm2vj vercel deploy --prebuilt --cwd apps/registry-web --scope ateeq1999s-projects --prod --yes",
+    "deploy:docs": "VERCEL_ORG_ID=team_ZXYg3N40sVxlvjK3XxEdk21M VERCEL_PROJECT_ID=prj_aCHwTqnPA0dNj8qkYzjaDgCYB4tc vercel deploy --prebuilt --cwd apps/docs --scope ateeq1999s-projects --yes",
+    "deploy:docs:prod": "VERCEL_ORG_ID=team_ZXYg3N40sVxlvjK3XxEdk21M VERCEL_PROJECT_ID=prj_aCHwTqnPA0dNj8qkYzjaDgCYB4tc vercel deploy --prebuilt --cwd apps/docs --scope ateeq1999s-projects --prod --yes",
+    "deploy:all:prod": "bun run build:web && bun run deploy:web:prod && bun run build:docs && bun run deploy:docs:prod"
   }
 }

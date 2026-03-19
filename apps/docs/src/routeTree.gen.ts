@@ -11,9 +11,23 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as DocsRouteImport } from './routes/docs'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as DocsTroubleshootingRouteImport } from './routes/docs/troubleshooting'
 import { Route as DocsRegistryRouteImport } from './routes/docs/registry'
+import { Route as DocsPackagesRouteImport } from './routes/docs/packages'
+import { Route as DocsInstallationRouteImport } from './routes/docs/installation'
 import { Route as DocsGettingStartedRouteImport } from './routes/docs/getting-started'
+import { Route as DocsFpfRouteImport } from './routes/docs/fpf'
+import { Route as DocsExamplesRouteImport } from './routes/docs/examples'
 import { Route as DocsCliRouteImport } from './routes/docs/cli'
+import { Route as DocsRegistrySelfHostingRouteImport } from './routes/docs/registry/self-hosting'
+import { Route as DocsRegistryApiRouteImport } from './routes/docs/registry/api'
+import { Route as DocsFpfPublishingRouteImport } from './routes/docs/fpf/publishing'
+import { Route as DocsFpfManifestRouteImport } from './routes/docs/fpf/manifest'
+import { Route as DocsCliStackRouteImport } from './routes/docs/cli/stack'
+import { Route as DocsCliSearchRouteImport } from './routes/docs/cli/search'
+import { Route as DocsCliInstallRouteImport } from './routes/docs/cli/install'
+import { Route as DocsCliInfoRouteImport } from './routes/docs/cli/info'
+import { Route as DocsCliFrameworkRouteImport } from './routes/docs/cli/framework'
 
 const DocsRoute = DocsRouteImport.update({
   id: '/docs',
@@ -25,9 +39,24 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DocsTroubleshootingRoute = DocsTroubleshootingRouteImport.update({
+  id: '/troubleshooting',
+  path: '/troubleshooting',
+  getParentRoute: () => DocsRoute,
+} as any)
 const DocsRegistryRoute = DocsRegistryRouteImport.update({
   id: '/registry',
   path: '/registry',
+  getParentRoute: () => DocsRoute,
+} as any)
+const DocsPackagesRoute = DocsPackagesRouteImport.update({
+  id: '/packages',
+  path: '/packages',
+  getParentRoute: () => DocsRoute,
+} as any)
+const DocsInstallationRoute = DocsInstallationRouteImport.update({
+  id: '/installation',
+  path: '/installation',
   getParentRoute: () => DocsRoute,
 } as any)
 const DocsGettingStartedRoute = DocsGettingStartedRouteImport.update({
@@ -35,33 +64,130 @@ const DocsGettingStartedRoute = DocsGettingStartedRouteImport.update({
   path: '/getting-started',
   getParentRoute: () => DocsRoute,
 } as any)
+const DocsFpfRoute = DocsFpfRouteImport.update({
+  id: '/fpf',
+  path: '/fpf',
+  getParentRoute: () => DocsRoute,
+} as any)
+const DocsExamplesRoute = DocsExamplesRouteImport.update({
+  id: '/examples',
+  path: '/examples',
+  getParentRoute: () => DocsRoute,
+} as any)
 const DocsCliRoute = DocsCliRouteImport.update({
   id: '/cli',
   path: '/cli',
   getParentRoute: () => DocsRoute,
 } as any)
+const DocsRegistrySelfHostingRoute = DocsRegistrySelfHostingRouteImport.update({
+  id: '/self-hosting',
+  path: '/self-hosting',
+  getParentRoute: () => DocsRegistryRoute,
+} as any)
+const DocsRegistryApiRoute = DocsRegistryApiRouteImport.update({
+  id: '/api',
+  path: '/api',
+  getParentRoute: () => DocsRegistryRoute,
+} as any)
+const DocsFpfPublishingRoute = DocsFpfPublishingRouteImport.update({
+  id: '/publishing',
+  path: '/publishing',
+  getParentRoute: () => DocsFpfRoute,
+} as any)
+const DocsFpfManifestRoute = DocsFpfManifestRouteImport.update({
+  id: '/manifest',
+  path: '/manifest',
+  getParentRoute: () => DocsFpfRoute,
+} as any)
+const DocsCliStackRoute = DocsCliStackRouteImport.update({
+  id: '/stack',
+  path: '/stack',
+  getParentRoute: () => DocsCliRoute,
+} as any)
+const DocsCliSearchRoute = DocsCliSearchRouteImport.update({
+  id: '/search',
+  path: '/search',
+  getParentRoute: () => DocsCliRoute,
+} as any)
+const DocsCliInstallRoute = DocsCliInstallRouteImport.update({
+  id: '/install',
+  path: '/install',
+  getParentRoute: () => DocsCliRoute,
+} as any)
+const DocsCliInfoRoute = DocsCliInfoRouteImport.update({
+  id: '/info',
+  path: '/info',
+  getParentRoute: () => DocsCliRoute,
+} as any)
+const DocsCliFrameworkRoute = DocsCliFrameworkRouteImport.update({
+  id: '/framework',
+  path: '/framework',
+  getParentRoute: () => DocsCliRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/docs': typeof DocsRouteWithChildren
-  '/docs/cli': typeof DocsCliRoute
+  '/docs/cli': typeof DocsCliRouteWithChildren
+  '/docs/examples': typeof DocsExamplesRoute
+  '/docs/fpf': typeof DocsFpfRouteWithChildren
   '/docs/getting-started': typeof DocsGettingStartedRoute
-  '/docs/registry': typeof DocsRegistryRoute
+  '/docs/installation': typeof DocsInstallationRoute
+  '/docs/packages': typeof DocsPackagesRoute
+  '/docs/registry': typeof DocsRegistryRouteWithChildren
+  '/docs/troubleshooting': typeof DocsTroubleshootingRoute
+  '/docs/cli/framework': typeof DocsCliFrameworkRoute
+  '/docs/cli/info': typeof DocsCliInfoRoute
+  '/docs/cli/install': typeof DocsCliInstallRoute
+  '/docs/cli/search': typeof DocsCliSearchRoute
+  '/docs/cli/stack': typeof DocsCliStackRoute
+  '/docs/fpf/manifest': typeof DocsFpfManifestRoute
+  '/docs/fpf/publishing': typeof DocsFpfPublishingRoute
+  '/docs/registry/api': typeof DocsRegistryApiRoute
+  '/docs/registry/self-hosting': typeof DocsRegistrySelfHostingRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/docs': typeof DocsRouteWithChildren
-  '/docs/cli': typeof DocsCliRoute
+  '/docs/cli': typeof DocsCliRouteWithChildren
+  '/docs/examples': typeof DocsExamplesRoute
+  '/docs/fpf': typeof DocsFpfRouteWithChildren
   '/docs/getting-started': typeof DocsGettingStartedRoute
-  '/docs/registry': typeof DocsRegistryRoute
+  '/docs/installation': typeof DocsInstallationRoute
+  '/docs/packages': typeof DocsPackagesRoute
+  '/docs/registry': typeof DocsRegistryRouteWithChildren
+  '/docs/troubleshooting': typeof DocsTroubleshootingRoute
+  '/docs/cli/framework': typeof DocsCliFrameworkRoute
+  '/docs/cli/info': typeof DocsCliInfoRoute
+  '/docs/cli/install': typeof DocsCliInstallRoute
+  '/docs/cli/search': typeof DocsCliSearchRoute
+  '/docs/cli/stack': typeof DocsCliStackRoute
+  '/docs/fpf/manifest': typeof DocsFpfManifestRoute
+  '/docs/fpf/publishing': typeof DocsFpfPublishingRoute
+  '/docs/registry/api': typeof DocsRegistryApiRoute
+  '/docs/registry/self-hosting': typeof DocsRegistrySelfHostingRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/docs': typeof DocsRouteWithChildren
-  '/docs/cli': typeof DocsCliRoute
+  '/docs/cli': typeof DocsCliRouteWithChildren
+  '/docs/examples': typeof DocsExamplesRoute
+  '/docs/fpf': typeof DocsFpfRouteWithChildren
   '/docs/getting-started': typeof DocsGettingStartedRoute
-  '/docs/registry': typeof DocsRegistryRoute
+  '/docs/installation': typeof DocsInstallationRoute
+  '/docs/packages': typeof DocsPackagesRoute
+  '/docs/registry': typeof DocsRegistryRouteWithChildren
+  '/docs/troubleshooting': typeof DocsTroubleshootingRoute
+  '/docs/cli/framework': typeof DocsCliFrameworkRoute
+  '/docs/cli/info': typeof DocsCliInfoRoute
+  '/docs/cli/install': typeof DocsCliInstallRoute
+  '/docs/cli/search': typeof DocsCliSearchRoute
+  '/docs/cli/stack': typeof DocsCliStackRoute
+  '/docs/fpf/manifest': typeof DocsFpfManifestRoute
+  '/docs/fpf/publishing': typeof DocsFpfPublishingRoute
+  '/docs/registry/api': typeof DocsRegistryApiRoute
+  '/docs/registry/self-hosting': typeof DocsRegistrySelfHostingRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -69,17 +195,64 @@ export interface FileRouteTypes {
     | '/'
     | '/docs'
     | '/docs/cli'
+    | '/docs/examples'
+    | '/docs/fpf'
     | '/docs/getting-started'
+    | '/docs/installation'
+    | '/docs/packages'
     | '/docs/registry'
+    | '/docs/troubleshooting'
+    | '/docs/cli/framework'
+    | '/docs/cli/info'
+    | '/docs/cli/install'
+    | '/docs/cli/search'
+    | '/docs/cli/stack'
+    | '/docs/fpf/manifest'
+    | '/docs/fpf/publishing'
+    | '/docs/registry/api'
+    | '/docs/registry/self-hosting'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/docs' | '/docs/cli' | '/docs/getting-started' | '/docs/registry'
+  to:
+    | '/'
+    | '/docs'
+    | '/docs/cli'
+    | '/docs/examples'
+    | '/docs/fpf'
+    | '/docs/getting-started'
+    | '/docs/installation'
+    | '/docs/packages'
+    | '/docs/registry'
+    | '/docs/troubleshooting'
+    | '/docs/cli/framework'
+    | '/docs/cli/info'
+    | '/docs/cli/install'
+    | '/docs/cli/search'
+    | '/docs/cli/stack'
+    | '/docs/fpf/manifest'
+    | '/docs/fpf/publishing'
+    | '/docs/registry/api'
+    | '/docs/registry/self-hosting'
   id:
     | '__root__'
     | '/'
     | '/docs'
     | '/docs/cli'
+    | '/docs/examples'
+    | '/docs/fpf'
     | '/docs/getting-started'
+    | '/docs/installation'
+    | '/docs/packages'
     | '/docs/registry'
+    | '/docs/troubleshooting'
+    | '/docs/cli/framework'
+    | '/docs/cli/info'
+    | '/docs/cli/install'
+    | '/docs/cli/search'
+    | '/docs/cli/stack'
+    | '/docs/fpf/manifest'
+    | '/docs/fpf/publishing'
+    | '/docs/registry/api'
+    | '/docs/registry/self-hosting'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -103,11 +276,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/docs/troubleshooting': {
+      id: '/docs/troubleshooting'
+      path: '/troubleshooting'
+      fullPath: '/docs/troubleshooting'
+      preLoaderRoute: typeof DocsTroubleshootingRouteImport
+      parentRoute: typeof DocsRoute
+    }
     '/docs/registry': {
       id: '/docs/registry'
       path: '/registry'
       fullPath: '/docs/registry'
       preLoaderRoute: typeof DocsRegistryRouteImport
+      parentRoute: typeof DocsRoute
+    }
+    '/docs/packages': {
+      id: '/docs/packages'
+      path: '/packages'
+      fullPath: '/docs/packages'
+      preLoaderRoute: typeof DocsPackagesRouteImport
+      parentRoute: typeof DocsRoute
+    }
+    '/docs/installation': {
+      id: '/docs/installation'
+      path: '/installation'
+      fullPath: '/docs/installation'
+      preLoaderRoute: typeof DocsInstallationRouteImport
       parentRoute: typeof DocsRoute
     }
     '/docs/getting-started': {
@@ -117,6 +311,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DocsGettingStartedRouteImport
       parentRoute: typeof DocsRoute
     }
+    '/docs/fpf': {
+      id: '/docs/fpf'
+      path: '/fpf'
+      fullPath: '/docs/fpf'
+      preLoaderRoute: typeof DocsFpfRouteImport
+      parentRoute: typeof DocsRoute
+    }
+    '/docs/examples': {
+      id: '/docs/examples'
+      path: '/examples'
+      fullPath: '/docs/examples'
+      preLoaderRoute: typeof DocsExamplesRouteImport
+      parentRoute: typeof DocsRoute
+    }
     '/docs/cli': {
       id: '/docs/cli'
       path: '/cli'
@@ -124,19 +332,138 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DocsCliRouteImport
       parentRoute: typeof DocsRoute
     }
+    '/docs/registry/self-hosting': {
+      id: '/docs/registry/self-hosting'
+      path: '/self-hosting'
+      fullPath: '/docs/registry/self-hosting'
+      preLoaderRoute: typeof DocsRegistrySelfHostingRouteImport
+      parentRoute: typeof DocsRegistryRoute
+    }
+    '/docs/registry/api': {
+      id: '/docs/registry/api'
+      path: '/api'
+      fullPath: '/docs/registry/api'
+      preLoaderRoute: typeof DocsRegistryApiRouteImport
+      parentRoute: typeof DocsRegistryRoute
+    }
+    '/docs/fpf/publishing': {
+      id: '/docs/fpf/publishing'
+      path: '/publishing'
+      fullPath: '/docs/fpf/publishing'
+      preLoaderRoute: typeof DocsFpfPublishingRouteImport
+      parentRoute: typeof DocsFpfRoute
+    }
+    '/docs/fpf/manifest': {
+      id: '/docs/fpf/manifest'
+      path: '/manifest'
+      fullPath: '/docs/fpf/manifest'
+      preLoaderRoute: typeof DocsFpfManifestRouteImport
+      parentRoute: typeof DocsFpfRoute
+    }
+    '/docs/cli/stack': {
+      id: '/docs/cli/stack'
+      path: '/stack'
+      fullPath: '/docs/cli/stack'
+      preLoaderRoute: typeof DocsCliStackRouteImport
+      parentRoute: typeof DocsCliRoute
+    }
+    '/docs/cli/search': {
+      id: '/docs/cli/search'
+      path: '/search'
+      fullPath: '/docs/cli/search'
+      preLoaderRoute: typeof DocsCliSearchRouteImport
+      parentRoute: typeof DocsCliRoute
+    }
+    '/docs/cli/install': {
+      id: '/docs/cli/install'
+      path: '/install'
+      fullPath: '/docs/cli/install'
+      preLoaderRoute: typeof DocsCliInstallRouteImport
+      parentRoute: typeof DocsCliRoute
+    }
+    '/docs/cli/info': {
+      id: '/docs/cli/info'
+      path: '/info'
+      fullPath: '/docs/cli/info'
+      preLoaderRoute: typeof DocsCliInfoRouteImport
+      parentRoute: typeof DocsCliRoute
+    }
+    '/docs/cli/framework': {
+      id: '/docs/cli/framework'
+      path: '/framework'
+      fullPath: '/docs/cli/framework'
+      preLoaderRoute: typeof DocsCliFrameworkRouteImport
+      parentRoute: typeof DocsCliRoute
+    }
   }
 }
 
+interface DocsCliRouteChildren {
+  DocsCliFrameworkRoute: typeof DocsCliFrameworkRoute
+  DocsCliInfoRoute: typeof DocsCliInfoRoute
+  DocsCliInstallRoute: typeof DocsCliInstallRoute
+  DocsCliSearchRoute: typeof DocsCliSearchRoute
+  DocsCliStackRoute: typeof DocsCliStackRoute
+}
+
+const DocsCliRouteChildren: DocsCliRouteChildren = {
+  DocsCliFrameworkRoute: DocsCliFrameworkRoute,
+  DocsCliInfoRoute: DocsCliInfoRoute,
+  DocsCliInstallRoute: DocsCliInstallRoute,
+  DocsCliSearchRoute: DocsCliSearchRoute,
+  DocsCliStackRoute: DocsCliStackRoute,
+}
+
+const DocsCliRouteWithChildren =
+  DocsCliRoute._addFileChildren(DocsCliRouteChildren)
+
+interface DocsFpfRouteChildren {
+  DocsFpfManifestRoute: typeof DocsFpfManifestRoute
+  DocsFpfPublishingRoute: typeof DocsFpfPublishingRoute
+}
+
+const DocsFpfRouteChildren: DocsFpfRouteChildren = {
+  DocsFpfManifestRoute: DocsFpfManifestRoute,
+  DocsFpfPublishingRoute: DocsFpfPublishingRoute,
+}
+
+const DocsFpfRouteWithChildren =
+  DocsFpfRoute._addFileChildren(DocsFpfRouteChildren)
+
+interface DocsRegistryRouteChildren {
+  DocsRegistryApiRoute: typeof DocsRegistryApiRoute
+  DocsRegistrySelfHostingRoute: typeof DocsRegistrySelfHostingRoute
+}
+
+const DocsRegistryRouteChildren: DocsRegistryRouteChildren = {
+  DocsRegistryApiRoute: DocsRegistryApiRoute,
+  DocsRegistrySelfHostingRoute: DocsRegistrySelfHostingRoute,
+}
+
+const DocsRegistryRouteWithChildren = DocsRegistryRoute._addFileChildren(
+  DocsRegistryRouteChildren,
+)
+
 interface DocsRouteChildren {
-  DocsCliRoute: typeof DocsCliRoute
+  DocsCliRoute: typeof DocsCliRouteWithChildren
+  DocsExamplesRoute: typeof DocsExamplesRoute
+  DocsFpfRoute: typeof DocsFpfRouteWithChildren
   DocsGettingStartedRoute: typeof DocsGettingStartedRoute
-  DocsRegistryRoute: typeof DocsRegistryRoute
+  DocsInstallationRoute: typeof DocsInstallationRoute
+  DocsPackagesRoute: typeof DocsPackagesRoute
+  DocsRegistryRoute: typeof DocsRegistryRouteWithChildren
+  DocsTroubleshootingRoute: typeof DocsTroubleshootingRoute
 }
 
 const DocsRouteChildren: DocsRouteChildren = {
-  DocsCliRoute: DocsCliRoute,
+  DocsCliRoute: DocsCliRouteWithChildren,
+  DocsExamplesRoute: DocsExamplesRoute,
+  DocsFpfRoute: DocsFpfRouteWithChildren,
   DocsGettingStartedRoute: DocsGettingStartedRoute,
-  DocsRegistryRoute: DocsRegistryRoute,
+  DocsInstallationRoute: DocsInstallationRoute,
+  DocsPackagesRoute: DocsPackagesRoute,
+  DocsRegistryRoute: DocsRegistryRouteWithChildren,
+  DocsTroubleshootingRoute: DocsTroubleshootingRoute,
 }
 
 const DocsRouteWithChildren = DocsRoute._addFileChildren(DocsRouteChildren)

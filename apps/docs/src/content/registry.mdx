@@ -1,58 +1,109 @@
 # Registry
 
-tsx ships with a built-in registry server you can self-host. It exposes a REST API
-that the CLI uses for search, install, info, and publish operations.
+The tsx registry is the central store for Framework Package Format (FPF) packages. It exposes
+a REST API consumed by the CLI for search, install, info, and publish operations, and by the
+web dashboard for browsing and managing packages.
+
+---
+
+## Public registry
+
+The default registry is hosted at:
+
+```
+https://registry.tsx.dev
+```
+
+The CLI uses this URL automatically. No configuration needed for standard use.
+
+---
+
+## Architecture
+
+```
+┌───────────────────┐     REST API      ┌──────────────────────┐
+│   tsx CLI         │ ──────────────▶   │  Registry Server     │
+│                   │                   │  (Rust binary)       │
+│  tsx install      │ ◀──────────────   │                      │
+│  tsx search       │                   │  PostgreSQL          │
+│  tsx info         │                   │  (package metadata)  │
+│  tsx framework    │                   │                      │
+│   publish         │                   │  Filesystem          │
+└───────────────────┘                   │  (package tarballs)  │
+                                        └──────────────────────┘
+┌───────────────────┐
+│  Registry Web     │ ──────────────▶  (same REST API)
+│  (this site)      │
+└───────────────────┘
+```
+
+- **Registry Server** — A single Rust binary backed by PostgreSQL for metadata and the local filesystem for `.tar.gz` package archives.
+- **CLI** — Talks to the registry over HTTP. Uses `TSX_REGISTRY_URL` to determine which registry to target.
+- **Web dashboard** — Wraps the same REST API for a visual interface.
+
+---
+
+## Environment variables
+
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `TSX_REGISTRY_URL` | Override the registry base URL | `https://registry.tsx.dev` |
+
+Set it to point the CLI at a self-hosted instance:
+
+```bash
+# In .env or shell profile
+export TSX_REGISTRY_URL=https://registry.my-org.com
+
+# Or per-command
+tsx install my-pattern --registry https://registry.my-org.com
+```
+
+---
 
 ## Self-hosting
 
-The registry server is a single Rust binary included in the tsx workspace:
+You can run your own private registry — for internal packages, air-gapped environments,
+or contributing to the open-source tsx project. See the [Self-hosting guide](/docs/registry/self-hosting).
 
-```bash
-cd crates/registry-server
-cargo run --release
-```
-
-It listens on `0.0.0.0:8080` by default.
-
-### Environment variables
-
-- `DATABASE_URL` — PostgreSQL connection string.
-- `DATA_DIR` — Directory for package tarballs (default: `./data`).
-- `PORT` — Port to listen on (default: `8080`).
-- `TSX_REGISTRY_API_KEY` — Required API key for publish operations.
-
-## Pointing the CLI at your registry
-
-Set the `TSX_REGISTRY_URL` environment variable:
-
-```bash
-export TSX_REGISTRY_URL=https://registry.your-org.com
-tsx install my-pattern
-```
+---
 
 ## API Reference
 
-### `GET /v1/search?q=&size=20`
+The registry exposes a versioned REST API under `/v1/`. See the [API Reference](/docs/registry/api)
+for full endpoint documentation with request/response examples.
 
-Search for packages. Returns a paginated list with total count.
+**Key endpoints:**
 
-### `GET /v1/packages/:name`
+| Method | Path | Description |
+|--------|------|-------------|
+| `GET` | `/health` | Health check |
+| `GET` | `/v1/stats` | Registry-wide statistics |
+| `GET` | `/v1/search` | Full-text package search |
+| `GET` | `/v1/packages` | List packages |
+| `GET` | `/v1/packages/:name` | Package metadata |
+| `GET` | `/v1/packages/:name/versions` | Version history |
+| `GET` | `/v1/packages/:name/:version/tarball` | Download archive |
+| `POST` | `/v1/packages/publish` | Publish a package (auth required) |
 
-Get metadata for a specific package.
+---
 
-### `GET /v1/packages/:name/versions`
+## Rate limits
 
-List all versions of a package.
+The publish endpoint is rate-limited to **10 requests per minute per IP**.
+Read endpoints have no hard limit but are cached at the CDN layer.
 
-### `GET /v1/packages/:name/:version/tarball`
+---
 
-Download a package version as a `.tar.gz` archive.
+## Package lifecycle
 
-### `POST /v1/packages/publish`
+```
+1. Author runs:  tsx framework publish --api-key sk_live_...
+2. Registry validates manifest and semver
+3. Tarball stored on filesystem, metadata written to PostgreSQL
+4. Package appears in search results immediately
+5. Users install via:  tsx install <name>@<version>
+```
 
-Publish a new package version. Requires `Authorization: Bearer <api-key>`.
-Rate limited to 10 requests per minute per IP.
-
-### `GET /v1/stats`
-
-Registry-wide statistics: total packages, downloads, versions, weekly activity.
+Versions are immutable once published — you cannot overwrite a published version.
+Always bump the semver in `manifest.json` before republishing.

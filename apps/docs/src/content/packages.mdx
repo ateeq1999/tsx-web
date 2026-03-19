@@ -43,14 +43,17 @@ export const packages = [
   },
 ]
 
-# First-party Packages
+# Official Packages
 
 Official `@tsx-pkg/*` packages are maintained by the tsx project and published to the
-[public registry](https://registry.tsx.dev). They follow the [FPF format](/docs/fpf)
-and can be installed with one command.
+[public registry](https://registry.tsx.dev). They follow the [FPF format](/docs/fpf),
+are version-pinned via `stack.json`, and can be installed with a single command.
 
 Each package declares a `provides[]` list of capability tokens. Other packages can declare
-`integrates_with` dependencies on these tokens, enabling automatic slot injection.
+`integrates_with` on these tokens to automatically inject code through the slot system —
+no manual wiring required.
+
+---
 
 ## Package index
 
@@ -76,21 +79,184 @@ Each package declares a `provides[]` list of capability tokens. Other packages c
           </span>
         ))}
       </div>
-      <pre style={{ marginBottom: 0 }}><code className="language-bash">{`tsx registry install ${pkg.name}`}</code></pre>
+      <pre style={{ marginBottom: 0 }}><code className="language-bash">{`tsx install ${pkg.name}`}</code></pre>
     </div>
   ))}
 </div>
 
+---
+
+## Package details
+
+### `@tsx-pkg/with-auth`
+
+Full [Better Auth](https://better-auth.com) integration for TanStack Start.
+
+**What gets scaffolded:**
+
+```
+src/
+├── lib/
+│   ├── auth.ts            # Server-side better-auth instance + Drizzle adapter
+│   └── auth-client.ts     # Client-side createAuthClient()
+├── middleware/
+│   └── auth-guard.ts      # requireAuth() — redirects unauthenticated users
+└── routes/
+    ├── auth/
+    │   ├── login.tsx       # Login form (email + password)
+    │   ├── register.tsx    # Sign-up form with email verification
+    │   ├── forgot-password.tsx
+    │   └── reset-password.tsx
+    └── _protected/
+        └── dashboard.tsx   # Example protected route
+```
+
+**Provides:** `auth`, `session`, `protected-routes`
+
+**Integrates with:** `@tsx-pkg/basic-crud` (injects session guard into CRUD route `beforeLoad`)
+
+---
+
+### `@tsx-pkg/tanstack-start`
+
+Opinionated TanStack Start project scaffold — router, query client, server functions, and
+a typed environment variable schema.
+
+**What gets scaffolded:**
+
+```
+src/
+├── router.tsx             # createRouter() with QueryClient + SSR dehydration
+├── routes/
+│   ├── __root.tsx         # Root layout + QueryClientProvider
+│   └── index.tsx          # Landing page stub
+├── integrations/
+│   └── tanstack-query/
+│       ├── index.tsx      # QueryClient factory
+│       └── ssr.tsx        # getQueryClient() for SSR
+└── env.ts                 # Zod-validated environment schema (VITE_ + server)
+```
+
+**Provides:** `router`, `query-client`, `server-functions`, `env-validation`
+
+---
+
+### `@tsx-pkg/drizzle-postgres`
+
+[Drizzle ORM](https://orm.drizzle.team) setup with a node-postgres connection pool,
+migration scripts, and a reusable base schema with timestamp helpers.
+
+**What gets scaffolded:**
+
+```
+src/
+└── db/
+    ├── index.ts           # pg Pool + drizzle() instance
+    ├── schema/
+    │   └── index.ts       # Re-exports all schema modules
+    └── helpers.ts         # timestamps() helper for createdAt/updatedAt
+drizzle.config.ts          # Drizzle Kit config (reads DATABASE_URL)
+```
+
+**Provides:** `database`, `migrations`, `schema`
+
+**Required env var:** `DATABASE_URL`
+
+---
+
+### `@tsx-pkg/with-shadcn`
+
+Bootstrap [shadcn/ui](https://ui.shadcn.com) into your project: Tailwind config,
+global CSS variables, and 10 starter components pre-configured with your theme.
+
+**What gets scaffolded:**
+
+- `tailwind.config.ts` — Extended config with shadcn CSS variable integration.
+- `src/styles/globals.css` — CSS variable definitions for light/dark themes.
+- `src/components/ui/` — 10 ready-to-use components: `Button`, `Input`, `Card`, `Badge`,
+  `Dialog`, `DropdownMenu`, `Tabs`, `Tooltip`, `Avatar`, `Separator`.
+
+**Provides:** `ui-components`, `tailwind`, `design-system`
+
+---
+
+### `@tsx-pkg/basic-crud`
+
+Full create/read/update/delete pattern with optimistic UI, server-side validation, and
+TanStack Query cache management.
+
+**What gets scaffolded:**
+
+```
+src/
+├── db/schema/
+│   └── items.ts           # Example Drizzle table (id, name, createdAt, updatedAt)
+├── server/
+│   └── items/
+│       ├── queries.ts     # getItems(), getItem(id)
+│       └── mutations.ts   # createItem(), updateItem(), deleteItem()
+└── routes/
+    └── items/
+        ├── index.tsx      # List view with optimistic deletion
+        ├── new.tsx        # Create form
+        └── $id.edit.tsx   # Edit form with optimistic update
+```
+
+**Provides:** `crud`, `server-functions`, `optimistic-ui`
+
+**Integrates with:** `@tsx-pkg/with-auth` (adds `requireAuth()` to all route `beforeLoad` hooks)
+
+---
+
+### `@tsx-pkg/full-saas`
+
+Batteries-included SaaS starter. Combines auth, teams/organizations, role-based access
+control, billing stubs, and an admin dashboard shell.
+
+**What gets scaffolded:**
+
+- Everything from `@tsx-pkg/with-auth`
+- `src/db/schema/` — `organizations`, `memberships`, `subscriptions` tables
+- `src/lib/rbac.ts` — `can(user, action, resource)` permission helper
+- `src/routes/_protected/` — Dashboard, settings, team management, billing stubs
+- `src/routes/_protected/admin/` — Admin panel with user list and audit log
+
+**Provides:** `auth`, `billing`, `teams`, `rbac`, `dashboard`
+
+---
+
 ## Publishing your own
 
-Anyone can publish packages to the registry. See the [Publishing guide](/docs/fpf/publishing) to get started.
-Community packages appear alongside first-party packages in search results.
+Anyone can publish packages to the public registry. Community packages appear alongside
+official packages in search results. See the [Publishing guide](/docs/fpf/publishing) to get started.
 
-## Providing capability tokens
+## Capability token conventions
 
-The `provides[]` field in `manifest.json` lists abstract capability tokens
-your package fulfills. For example, a package that sets up authentication should list `"auth"`.
-Other packages can then declare `integrates_with` to inject code into your package's slots.
+Use these standard tokens in your `provides[]` where applicable to maximise
+interoperability with other packages:
 
-Standardised token names ensure interoperability — use the tokens from existing official packages
-where possible, or introduce new ones with clear documentation.
+| Token | Meaning |
+|-------|---------|
+| `auth` | Provides authentication (sign-in/sign-out) |
+| `session` | Provides server-side session storage |
+| `protected-routes` | Provides route-level auth guard middleware |
+| `database` | Provides a database client/connection |
+| `migrations` | Provides schema migration tooling |
+| `schema` | Provides a Drizzle (or other ORM) schema |
+| `crud` | Provides create/read/update/delete operations |
+| `server-functions` | Provides TanStack Start server functions |
+| `optimistic-ui` | Provides optimistic mutation UI patterns |
+| `ui-components` | Provides a UI component library |
+| `tailwind` | Provides Tailwind CSS setup |
+| `design-system` | Provides a theme/design token system |
+| `router` | Provides router configuration |
+| `query-client` | Provides a TanStack Query client |
+| `env-validation` | Provides Zod-validated env schema |
+| `rbac` | Provides role-based access control |
+| `billing` | Provides billing/subscription infrastructure |
+| `teams` | Provides multi-tenant org/team model |
+| `dashboard` | Provides an admin/user dashboard shell |
+| `i18n` | Provides internationalisation support |
+| `analytics` | Provides analytics tracking |
+| `storage` | Provides file/object storage |
+| `email` | Provides transactional email sending |

@@ -1,34 +1,85 @@
 # Getting Started
 
-tsx is a CLI for installing and publishing reusable code patterns for TanStack Start projects.
-Think of it like shadcn/ui, but for full-stack patterns — routing, auth, CRUD, and more.
+tsx is a CLI for installing and publishing reusable full-stack code patterns into [TanStack Start](https://tanstack.com/start) projects.
+Think of it like shadcn/ui, but for complete patterns — auth flows, CRUD with optimistic UI,
+Drizzle ORM setups, role-based access, and more.
 
-## Installation
+## How it works
 
-Install tsx globally via Cargo:
+A tsx **package** (called a _Framework Package_) is a versioned bundle of:
+
+- **Generator scripts** — Rhai or shell scripts that scaffold files into your project structure.
+- **Templates** — Handlebars templates for the generated source files.
+- **A manifest** — `manifest.json` describing what the package provides and how it slots into others.
+
+When you run `tsx install with-auth`, tsx:
+
+1. Downloads the package tarball from the registry.
+2. Copies generators, templates, and the manifest into `.tsx/packages/with-auth/`.
+3. Records the pinned version in `.tsx/stack.json`.
+4. Automatically wires any slot injections into other installed packages.
+
+No runtime dependency is added to your project — tsx writes source files directly, not wrappers.
+
+---
+
+## Prerequisites
+
+- A [TanStack Start](https://tanstack.com/start) project (or any compatible Vite + React setup).
+- The tsx CLI installed — see [Installation](/docs/installation).
+
+---
+
+## Quick start
+
+### 1. Install the CLI
 
 ```bash
 cargo install tsx-forge
 ```
 
-Or download a prebuilt binary from the GitHub releases page.
+Or download a pre-built binary from the [GitHub Releases page](https://github.com/ateeq1999/tsx/releases).
 
-## Your first install
+### 2. Navigate to your project
 
-Navigate to a TanStack Start project, then run:
+```bash
+cd my-tanstack-app
+```
+
+### 3. Install your first package
 
 ```bash
 tsx install with-auth
 ```
 
-This will scaffold Better Auth integration — auth server, client, middleware, and a
-protected dashboard route — directly into your project.
+tsx scaffolds a full Better Auth integration directly into your project:
 
-## Search for patterns
+```
+src/
+├── lib/
+│   ├── auth.ts            # Server-side auth config
+│   └── auth-client.ts     # Client-side auth instance
+└── middleware/
+    └── auth-guard.ts      # requireAuth() helper
+```
+
+No manual wiring needed — the files are ready to use.
+
+---
+
+## Browse and discover packages
+
+Search the registry from the terminal:
 
 ```bash
 tsx search crud
+tsx search --lang typescript
+tsx search auth --size 10
 ```
+
+Or browse visually at [registry.tsx.dev](https://registry.tsx.dev).
+
+---
 
 ## Get info about a package
 
@@ -36,8 +87,66 @@ tsx search crud
 tsx info with-auth
 ```
 
+```
+with-auth  v1.3.0
+Better Auth integration for TanStack Start projects.
+
+Author:    ateeq1999
+License:   MIT
+Downloads: 4 201
+Updated:   2026-01-15
+
+provides:
+  - auth
+  - session
+
+integrates_with:
+  tanstack-crud: injects session guard into CRUD routes
+```
+
+---
+
+## Install multiple packages — automatic integration
+
+Packages integrate with each other automatically through the _slot system_.
+Install auth and CRUD together:
+
+```bash
+tsx install with-auth
+tsx install tanstack-crud
+```
+
+Because `with-auth` declares `integrates_with.tanstack-crud` in its manifest, tsx
+automatically injects the auth guard into the CRUD route templates — no manual edits required.
+
+---
+
+## Reproduce a setup across machines
+
+After installing packages, `.tsx/stack.json` records all installed versions:
+
+```json
+{
+  "version": 1,
+  "packages": {
+    "with-auth": "1.3.0",
+    "tanstack-crud": "2.1.0"
+  }
+}
+```
+
+Commit this file. Anyone cloning the project can restore the exact same setup:
+
+```bash
+tsx stack apply --install
+```
+
+---
+
 ## Next steps
 
-- Read the [CLI reference](/docs/cli) to learn all available commands
-- Learn about [FPF (Framework Package Format)](/docs/fpf) to publish your own patterns
-- Browse the [public registry](https://registry.tsx.dev) to discover community packages
+- [Installation guide](/docs/installation) — All installation methods.
+- [CLI reference](/docs/cli) — Every command, flag, and environment variable.
+- [Framework Package Format](/docs/fpf) — Build and publish your own packages.
+- [Examples](/docs/examples) — Ready-to-install community packages.
+- [Official Packages](/docs/packages) — First-party `@tsx-pkg/*` packages.

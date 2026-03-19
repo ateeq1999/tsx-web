@@ -24,7 +24,7 @@ export const auth = betterAuth({
 			},
 		},
 	},
-	trustedOrigins: [process.env.VITE_CORS_ORIGIN || "http://localhost:3000"],
+	trustedOrigins: [process.env.CORS_ORIGIN || "http://localhost:3000"],
 	emailAndPassword: {
 		enabled: true,
 	},
@@ -45,7 +45,7 @@ export const auth = betterAuth({
 	}),
 	advanced: {
 		defaultCookieAttributes: {
-			sameSite: "none",
+			sameSite: "lax",
 			secure: true,
 			httpOnly: true,
 		},

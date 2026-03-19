@@ -7,8 +7,8 @@ on:
     branches: [main]
 
 jobs:
-  build:
-    name: Build & Typecheck
+  typecheck:
+    name: Typecheck
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -23,22 +23,10 @@ jobs:
         working-directory: apps/registry-web
         run: bun run typecheck
 
-      - name: Build registry-web (vercel preset)
-        working-directory: apps/registry-web
-        run: bun run build
-        env:
-          NITRO_PRESET: vercel
-
-      - name: Build docs (vercel preset)
-        working-directory: apps/docs
-        run: bun run build
-        env:
-          NITRO_PRESET: vercel
-
   deploy:
-    name: Deploy to Vercel
+    name: Build & Deploy to Vercel
     runs-on: ubuntu-latest
-    needs: build
+    needs: typecheck
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     steps:
       - uses: actions/checkout@v4
@@ -46,13 +34,13 @@ jobs:
         with:
           bun-version: latest
 
-      - name: Install Vercel CLI
-        run: bun add -g vercel
-
       - name: Install dependencies
         run: bun install
 
-      - name: Build registry-web (vercel preset)
+      - name: Install Vercel CLI
+        run: bun add -g vercel
+
+      - name: Build registry-web
         working-directory: apps/registry-web
         run: bun run build
         env:
@@ -69,7 +57,7 @@ jobs:
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_REGISTRY_WEB_PROJECT_ID }}
 
-      - name: Build docs (vercel preset)
+      - name: Build docs
         working-directory: apps/docs
         run: bun run build
         env:

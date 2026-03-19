@@ -1,106 +1,27 @@
 /**
  * @tsx/api-types
  *
- * TypeScript interfaces that mirror the JSON shapes produced by the Rust
- * registry server (crates/registry-server / crates/shared).
+ * Re-exports component schemas from the auto-generated `generated.ts` as
+ * named TypeScript types.  The source of truth is the OpenAPI spec served
+ * by the registry at `/api-docs/openapi.json`.
  *
- * Keep in sync with crates/shared/src/lib.rs.
- * Future: auto-generate via `utoipa` (OpenAPI) → `openapi-typescript`.
+ * To regenerate `generated.ts`:
+ *   REGISTRY_URL=https://tsx-tsnv.onrender.com bun run --filter @tsx/api-types gen
  */
 
-// ── Package ───────────────────────────────────────────────────────────────────
+export type { paths, components } from "./generated"
 
-/** Full package metadata returned by GET /v1/packages/:name */
-export interface Package {
-  name: string
-  /** Latest semver version string */
-  version: string
-  description: string
-  /** Display name of the author */
-  author: string
-  license: string
-  tags: string[]
-  /** Minimum required tsx CLI version */
-  tsx_min: string
-  created_at: string
-  updated_at: string
-  download_count: number
-  lang?: string
-  runtime?: string
-  provides?: string[]
-  integrates_with?: string[]
-}
+import type { components } from "./generated"
 
-// ── PackageVersion ────────────────────────────────────────────────────────────
+// ── Named type aliases (keep existing import paths working) ───────────────────
 
-/** One entry in a package's version history */
-export interface PackageVersion {
-  version: string
-  published_at: string
-  download_count: number
-}
-
-// ── Search ────────────────────────────────────────────────────────────────────
-
-/** Paginated search response from GET /v1/search */
-export interface SearchResult {
-  packages: Package[]
-  total: number
-  page: number
-  per_page: number
-}
-
-// ── Stats ─────────────────────────────────────────────────────────────────────
-
-/** Registry-wide aggregate statistics from GET /v1/stats */
-export interface RegistryStats {
-  total_packages: number
-  total_downloads: number
-  total_versions: number
-  packages_this_week: number
-}
-
-// ── Downloads ─────────────────────────────────────────────────────────────────
-
-/** Per-day download count for the trend chart */
-export interface DailyDownloads {
-  date: string
-  downloads: number
-}
-
-// ── Admin ─────────────────────────────────────────────────────────────────────
-
-/** Audit log entry from GET /v1/admin/audit-log */
-export interface AuditEntry {
-  id: number
-  action: string
-  package_name: string
-  version?: string
-  author_name?: string
-  ip_address?: string
-  created_at: string
-}
-
-/** Rate limit status per IP from GET /v1/admin/rate-limits */
-export interface RateLimitEntry {
-  ip: string
-  requests: number
-  limit: number
-  blocked: boolean
-  window_secs_remaining: number
-}
-
-// ── Error ─────────────────────────────────────────────────────────────────────
-
-/** Standard error response shape on 4xx/5xx */
-export interface ApiError {
-  error: string
-}
-
-// ── Publish ───────────────────────────────────────────────────────────────────
-
-/** Success response from POST /v1/packages/publish */
-export interface PublishResult {
-  name: string
-  version: string
-}
+export type Package        = components["schemas"]["Package"]
+export type PackageVersion = components["schemas"]["PackageVersion"]
+export type SearchResult   = components["schemas"]["SearchResult"]
+export type RegistryStats  = components["schemas"]["RegistryStats"]
+export type DailyDownloads = components["schemas"]["DailyDownloads"]
+export type PublishResult  = components["schemas"]["PublishResult"]
+export type AuditEntry     = components["schemas"]["AuditEntry"]
+export type RateLimitEntry = components["schemas"]["RateLimitEntry"]
+export type Webhook        = components["schemas"]["Webhook"]
+export type ApiError       = components["schemas"]["ApiError"]

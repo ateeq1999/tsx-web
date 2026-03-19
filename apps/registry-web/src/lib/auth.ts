@@ -1,4 +1,5 @@
 import { betterAuth } from "better-auth";
+import { bearer } from "better-auth/plugins";
 import { tanstackStartCookies } from "better-auth/tanstack-start";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { db } from "@/db";
@@ -59,5 +60,9 @@ export const auth = betterAuth({
 			httpOnly: true,
 		},
 	},
-	plugins: [tanstackStartCookies()],
+	// bearer() lets the Rust registry server (and the tsx CLI) authenticate via
+	// `Authorization: Bearer <session-token>` in addition to cookies.
+	// The session.token is the same opaque value stored in the `session` table —
+	// no schema changes required.
+	plugins: [tanstackStartCookies(), bearer()],
 });

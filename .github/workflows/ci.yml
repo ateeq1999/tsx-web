@@ -46,6 +46,10 @@ jobs:
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
+      - name: Regenerate @tsx/api-types from OpenAPI spec
+        run: REGISTRY_URL=https://tsx-tsnv.onrender.com bun run --filter @tsx/api-types gen
+        continue-on-error: true  # Don't fail build if registry is temporarily unreachable
+
       - name: Build registry-web
         working-directory: apps/registry-web
         run: bun run build

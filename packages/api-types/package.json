@@ -6,7 +6,11 @@
   "exports": {
     ".": "./src/index.ts"
   },
+  "scripts": {
+    "gen": "bunx openapi-typescript $REGISTRY_URL/api-docs/openapi.json -o src/generated.ts"
+  },
   "devDependencies": {
+    "openapi-typescript": "^7.0.0",
     "typescript": "^5.7.2"
   }
 }

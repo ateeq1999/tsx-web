@@ -28,6 +28,15 @@ export const auth = betterAuth({
 	emailAndPassword: {
 		enabled: true,
 	},
+	rateLimit: {
+		window: 60,
+		max: 20,
+		customRules: {
+			"/sign-in/email": { window: 60, max: 5 },
+			"/sign-up/email": { window: 60, max: 3 },
+			"/forget-password": { window: 60, max: 3 },
+		},
+	},
 	// Social providers — configure via env vars; disabled if not set
 	...(process.env.GITHUB_CLIENT_ID && {
 		socialProviders: {

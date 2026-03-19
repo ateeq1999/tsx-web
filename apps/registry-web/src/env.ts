@@ -4,6 +4,7 @@ const envSchema = z.object({
   VITE_REGISTRY_URL: z.string().url().optional().default("https://tsx-tsnv.onrender.com"),
   VITE_SITE_URL: z.string().url().optional().default("https://registry.tsx.dev"),
   VITE_SERVER_URL: z.string().url().optional().default("http://localhost:3000"),
+  VITE_SENTRY_DSN: z.string().optional(),
 })
 
 function validateEnv() {
@@ -11,6 +12,7 @@ function validateEnv() {
     VITE_REGISTRY_URL: import.meta.env.VITE_REGISTRY_URL,
     VITE_SITE_URL: import.meta.env.VITE_SITE_URL,
     VITE_SERVER_URL: import.meta.env.VITE_SERVER_URL,
+    VITE_SENTRY_DSN: import.meta.env.VITE_SENTRY_DSN,
   })
 
   if (!result.success) {

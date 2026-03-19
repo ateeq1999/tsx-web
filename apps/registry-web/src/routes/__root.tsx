@@ -14,8 +14,12 @@ import { Footer } from "@/components/Footer"
 import TanStackQueryProvider from "@/integrations/tanstack-query/root-provider"
 import TanStackQueryDevtools from "@/integrations/tanstack-query/devtools"
 
+import { initSentry } from "@/lib/sentry"
 import "@/env" // validate env vars at startup
 import appCss from "@/styles.css?url"
+
+// Initialize Sentry as early as possible (no-op when VITE_SENTRY_DSN is unset)
+initSentry()
 
 import type { QueryClient } from "@tanstack/react-query"
 

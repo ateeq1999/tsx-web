@@ -6,7 +6,12 @@
   "exports": {
     "./theme-toggle": "./src/ThemeToggle.tsx",
     "./footer": "./src/Footer.tsx",
-    "./base-header": "./src/BaseHeader.tsx"
+    "./base-header": "./src/BaseHeader.tsx",
+    "./button": "./src/Button.tsx",
+    "./badge": "./src/Badge.tsx",
+    "./spinner": "./src/Spinner.tsx",
+    "./card": "./src/Card.tsx",
+    "./input": "./src/Input.tsx"
   },
   "peerDependencies": {
     "lucide-react": ">=0.400.0",

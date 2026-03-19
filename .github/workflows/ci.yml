@@ -40,6 +40,12 @@ jobs:
       - name: Install Vercel CLI
         run: bun add -g vercel
 
+      - name: Run DB migrations
+        working-directory: apps/registry-web
+        run: bun run db:migrate
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+
       - name: Build registry-web
         working-directory: apps/registry-web
         run: bun run build

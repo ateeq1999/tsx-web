@@ -79,6 +79,13 @@ export interface paths {
       responses: { 200: { content: { "application/gzip": Blob } } }
     }
   }
+  "/v1/packages/{name}/deprecate": {
+    put: {
+      parameters: { path: { name: string } }
+      requestBody: { content: { "application/json": { message?: string | null } } }
+      responses: { 200: { content: { "application/json": { ok: boolean } } } }
+    }
+  }
   "/v1/packages/{name}/versions/{version}": {
     delete: {
       parameters: { path: { name: string; version: string } }
@@ -139,6 +146,8 @@ export interface components {
       created_at: string
       updated_at: string
       download_count: number
+      star_count?: number
+      deprecated_message?: string
       lang?: string
       runtime?: string
       provides?: string[]

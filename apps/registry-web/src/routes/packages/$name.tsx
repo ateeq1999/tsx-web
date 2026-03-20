@@ -2,8 +2,8 @@ import { createFileRoute, notFound, Link } from "@tanstack/react-router"
 import { useQuery } from "@tanstack/react-query"
 import { marked } from "marked"
 import DOMPurify from "dompurify"
-import { Check, Clock, Copy, Download, Tag, User, TrendingUp } from "lucide-react"
-import { useState, useEffect, useRef } from "react"
+import { Check, Clock, Copy, Download, Star, Tag, User, TrendingUp } from "lucide-react"
+import { useState, useEffect, useRef, useCallback } from "react"
 import hljs from "highlight.js/lib/core"
 import hljsTs from "highlight.js/lib/languages/typescript"
 import hljsJs from "highlight.js/lib/languages/javascript"
@@ -28,6 +28,25 @@ import {
 import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { DependencyGraph } from "@/components/DependencyGraph"
+import { env } from "@/env"
+
+async function fetchStarStatus(name: string): Promise<{ star_count: number; starred: boolean | null }> {
+  const res = await fetch(`${env.VITE_REGISTRY_URL}/v1/packages/${encodeURIComponent(name)}/star`, {
+    credentials: "include",
+  })
+  if (!res.ok) return { star_count: 0, starred: null }
+  return res.json()
+}
+
+async function toggleStar(name: string, currentlyStarred: boolean): Promise<{ star_count: number }> {
+  const method = currentlyStarred ? "DELETE" : "POST"
+  const res = await fetch(`${env.VITE_REGISTRY_URL}/v1/packages/${encodeURIComponent(name)}/star`, {
+    method,
+    credentials: "include",
+  })
+  if (!res.ok) throw new Error("Star request failed")
+  return res.json()
+}
 
 export const Route = createFileRoute("/packages/$name")({
   loader: async ({ context: { queryClient }, params: { name } }) => {
@@ -45,7 +64,7 @@ export const Route = createFileRoute("/packages/$name")({
       { title: `${name} — tsx registry` },
       { name: "description", content: `Install ${name} with tsx. Browse package details, versions, and documentation.` },
       { property: "og:title", content: `${name} — tsx registry` },
-      { property: "og:description", content: `Install ${name} with one command: tsx install ${name}` },
+      { property: "og:description", content: `Install ${name} with one command: tsx pkg install ${name}` },
     ],
   }),
   notFoundComponent: () => (
@@ -55,6 +74,51 @@ export const Route = createFileRoute("/packages/$name")({
   ),
   component: PackageDetailPage,
 })
+
+function StarButton({ name }: { name: string }) {
+  const [starCount, setStarCount] = useState<number>(0)
+  const [starred, setStarred] = useState<boolean>(false)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    fetchStarStatus(name).then((s) => {
+      setStarCount(s.star_count)
+      setStarred(s.starred ?? false)
+      setLoading(false)
+    })
+  }, [name])
+
+  const handleClick = useCallback(async () => {
+    if (loading) return
+    setLoading(true)
+    try {
+      const res = await toggleStar(name, starred)
+      setStarCount(res.star_count)
+      setStarred((prev) => !prev)
+    } catch {
+      // ignore — user may not be logged in
+    } finally {
+      setLoading(false)
+    }
+  }, [name, starred, loading])
+
+  return (
+    <button
+      onClick={handleClick}
+      disabled={loading}
+      className="flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-sm transition-colors disabled:opacity-50"
+      style={{
+        borderColor: starred ? "var(--lagoon)" : "var(--line)",
+        color: starred ? "var(--lagoon)" : "var(--sea-ink-soft)",
+        background: starred ? "var(--lagoon-muted)" : "transparent",
+      }}
+      title={starred ? "Unstar this package" : "Star this package"}
+    >
+      <Star className="size-3.5" fill={starred ? "currentColor" : "none"} />
+      <span>{starCount}</span>
+    </button>
+  )
+}
 
 function CopyButton({ text }: { text: string }) {
   const [copied, setCopied] = useState(false)
@@ -109,11 +173,12 @@ function PackageDetailPage() {
     <div className="page-wrap py-12 rise-in">
       {/* Header */}
       <div className="mb-8">
-        <div className="mb-2 flex items-center gap-3">
+        <div className="mb-2 flex items-center gap-3 flex-wrap">
           <h1 className="font-mono text-3xl font-bold" style={{ color: "var(--sea-ink)" }}>
             {pkg.name}
           </h1>
           <Badge variant="secondary">v{pkg.version}</Badge>
+          <StarButton name={pkg.name} />
         </div>
         <p className="mb-4 text-sm leading-relaxed" style={{ color: "var(--sea-ink-soft)" }}>
           {pkg.description}
@@ -125,15 +190,31 @@ function PackageDetailPage() {
         </div>
       </div>
 
+      {/* Deprecation banner */}
+      {pkg.deprecated_message && (
+        <div
+          className="mb-6 flex items-start gap-3 rounded-xl border px-5 py-4 text-sm"
+          style={{ borderColor: "#f59e0b", background: "rgba(245,158,11,0.08)", color: "#92400e" }}
+          role="alert"
+        >
+          <span className="mt-0.5 shrink-0 text-base">⚠️</span>
+          <div>
+            <span className="font-semibold">Deprecated</span>
+            {" — "}
+            {pkg.deprecated_message}
+          </div>
+        </div>
+      )}
+
       {/* Install command */}
       <div className="island-shell mb-8 rounded-xl p-4">
         <p className="island-kicker mb-2">Install</p>
         <div className="flex items-center gap-3 rounded-lg bg-black/5 px-4 py-2 dark:bg-white/5">
           <span style={{ color: "var(--lagoon)" }} className="font-bold">$</span>
           <code className="flex-1 text-sm" style={{ color: "var(--sea-ink)" }}>
-            tsx install {pkg.name}
+            tsx pkg install {pkg.name}
           </code>
-          <CopyButton text={`tsx install ${pkg.name}`} />
+          <CopyButton text={`tsx pkg install ${pkg.name}`} />
         </div>
       </div>
 

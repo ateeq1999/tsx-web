@@ -11,6 +11,8 @@ export const PackageSchema = z.object({
   created_at: z.string(),
   updated_at: z.string(),
   download_count: z.number(),
+  star_count: z.number().default(0),
+  deprecated_message: z.string().optional(),
   lang: z.string().optional(),
   runtime: z.string().optional(),
   provides: z.array(z.string()).optional(),

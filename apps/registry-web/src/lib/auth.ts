@@ -38,13 +38,15 @@ export const auth = betterAuth({
 			"/forget-password": { window: 60, max: 3 },
 		},
 	},
-	// Social providers — configure via env vars; disabled if not set
-	...(process.env.GITHUB_CLIENT_ID && {
+	// Social providers — each activates independently when its env vars are set
+	...((process.env.GITHUB_CLIENT_ID || process.env.GOOGLE_CLIENT_ID) && {
 		socialProviders: {
-			github: {
-				clientId: process.env.GITHUB_CLIENT_ID,
-				clientSecret: process.env.GITHUB_CLIENT_SECRET!,
-			},
+			...(process.env.GITHUB_CLIENT_ID && {
+				github: {
+					clientId: process.env.GITHUB_CLIENT_ID,
+					clientSecret: process.env.GITHUB_CLIENT_SECRET!,
+				},
+			}),
 			...(process.env.GOOGLE_CLIENT_ID && {
 				google: {
 					clientId: process.env.GOOGLE_CLIENT_ID,

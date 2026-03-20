@@ -3,6 +3,7 @@ import {
   Link,
   Scripts,
   createRootRouteWithContext,
+  useNavigate,
 } from "@tanstack/react-router"
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools"
 import { TanStackDevtools } from "@tanstack/react-devtools"
@@ -22,21 +23,52 @@ import appCss from "@/styles.css?url"
 initSentry()
 
 import type { QueryClient } from "@tanstack/react-query"
+import { useState, type FormEvent } from "react"
+import { Search } from "lucide-react"
 
 interface MyRouterContext {
   queryClient: QueryClient
 }
 
-const THEME_INIT_SCRIPT = `(function(){try{var stored=window.localStorage.getItem('theme');var mode=(stored==='light'||stored==='dark'||stored==='auto')?stored:'auto';var prefersDark=window.matchMedia('(prefers-color-scheme: dark)').matches;var resolved=mode==='auto'?(prefersDark?'dark':'light'):mode;var root=document.documentElement;root.classList.remove('light','dark');root.classList.add(resolved);if(mode==='auto'){root.removeAttribute('data-theme')}else{root.setAttribute('data-theme',mode)}root.style.colorScheme=resolved;}catch(e){}})();`
+const THEME_INIT_SCRIPT = `(function(){try{var stored=window.localStorage.getItem('theme');var isSystem=stored==='system'||stored==='auto'||!stored;var mode=isSystem?'system':(stored==='light'||stored==='dark')?stored:'system';var prefersDark=window.matchMedia('(prefers-color-scheme: dark)').matches;var resolved=mode==='system'?(prefersDark?'dark':'light'):mode;var root=document.documentElement;root.classList.remove('light','dark');root.classList.add(resolved);root.style.colorScheme=resolved;}catch(e){}})();`
 
 function NotFoundPage() {
+  const [query, setQuery] = useState("")
+  const navigate = useNavigate()
+
+  function handleSearch(e: FormEvent) {
+    e.preventDefault()
+    const q = query.trim()
+    if (q) navigate({ to: "/browse", search: { q, page: 1, lang: "", sort: "relevant" } })
+  }
+
   return (
     <div className="page-wrap py-24 rise-in text-center">
       <p className="mb-2 text-6xl font-bold" style={{ color: "var(--lagoon)" }}>404</p>
       <h1 className="mb-3 text-2xl font-bold" style={{ color: "var(--sea-ink)" }}>Page not found</h1>
-      <p className="mb-8 text-sm" style={{ color: "var(--sea-ink-soft)" }}>
+      <p className="mb-6 text-sm" style={{ color: "var(--sea-ink-soft)" }}>
         The page you're looking for doesn't exist or has been moved.
       </p>
+
+      {/* Inline search */}
+      <form onSubmit={handleSearch} className="mx-auto mb-8 flex max-w-sm gap-2">
+        <div className="relative flex-1">
+          <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2" style={{ color: "var(--sea-ink-soft)" }} />
+          <input
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Search packages…"
+            className="w-full rounded-lg border py-2 pl-9 pr-3 text-sm outline-none focus:ring-2"
+            style={{
+              borderColor: "var(--line)",
+              background: "var(--surface-strong)",
+              color: "var(--sea-ink)",
+            }}
+          />
+        </div>
+        <Button type="submit" disabled={!query.trim()}>Search</Button>
+      </form>
+
       <div className="flex justify-center gap-3">
         <Button asChild>
           <Link to="/">Go home</Link>

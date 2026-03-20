@@ -50,4 +50,10 @@ export const registryApi = {
       `/v1/packages/${encodeURIComponent(name)}/stats/downloads`,
       z.array(DailyDownloadsSchema),
     ),
+
+  getUserPackages: (author: string) =>
+    fetchJson<Array<Package>>(
+      `/v1/users/${encodeURIComponent(author)}/packages`,
+      z.array(PackageSchema),
+    ),
 }
